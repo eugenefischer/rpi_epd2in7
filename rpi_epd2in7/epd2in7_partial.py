@@ -121,7 +121,7 @@ class EPD(DisplayDriver):
         
         #code added by eugenefischer for integration with PaperTTY
         self.name = epd2in7_partial
-        self.supports_partial = True
+        self.supports_partial = False #So PaperTTY won't calculate image diff itself
         self.white = 255
         self.black = 0
         self.colors = 2
@@ -416,3 +416,8 @@ class EPD(DisplayDriver):
         self.send_command(DEEP_SLEEP)
         self.delay_ms(2)
         self.send_data(0xa5)  # deep sleep requires 0xa5 as a "check code" parameter
+        
+    #method added for compatibility with PaperTTY    
+    def draw(self, x, y, image):
+        self.smart_update(image)
+        
