@@ -35,6 +35,8 @@ import spidev
 from .lut import LUT, QuickLUT
 import RPi.GPIO as GPIO
 from PIL import ImageChops
+#added by eugenefischer for compatibility with PaperTTY
+from papertty.drivers.drivers_base import DisplayDriver
 
 # Pin definition
 RST_PIN         = 17
@@ -96,7 +98,8 @@ def _nearest_mult_of_8(number, up=True):
         return (number // 8) * 8
 
 
-class EPD(object):
+class EPD(DisplayDriver):
+   
     def __init__(self, partial_refresh_limit=32, fast_refresh=True):
         """ Initialize the EPD class.
         `partial_refresh_limit` - number of partial refreshes before a full refrersh is forced
@@ -117,9 +120,12 @@ class EPD(object):
         self.spi = spidev.SpiDev(0, 0)
         
         #code added by eugenefischer for integration with PaperTTY
+        self.name = epd2in7_partial
         self.supports_partial = True
         self.white = 255
         self.black = 0
+        self.colors = 2
+        self.type = 'Waveshare e-Paper'
 
     def digital_write(self, pin, value):
         return GPIO.output(pin, value)
